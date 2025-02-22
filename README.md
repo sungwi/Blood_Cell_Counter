@@ -4,6 +4,8 @@ Replace the title with your project title, and **add a snappy acronym that peopl
 
 Add a 1-2 line summary of your project here.
 
+Deciding on which topic to choose over a Discord meeting on February 22.
+
 ## Important Links
 
 | [Timesheet](https://1sfu-my.sharepoint.com/:x:/g/personal/hamarneh_sfu_ca/ESLM1jsUUh1Ar89Cm5tXbsgB6QWCOIXIvXXyj7QZ4exStQ?e=33fGUC) | [Slack channel](https://app.slack.com/client/T0866LNE29J/C085YA5CCUF) | [Project report](https://www.overleaf.com/project/676b843477fee1c1b96609a4) |
