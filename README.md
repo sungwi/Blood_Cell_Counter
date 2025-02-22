@@ -100,4 +100,9 @@ Output will be saved in ...
     - Do NOT use the repository to upload data
 - Use [VSCode](https://code.visualstudio.com/) or a similarly powerful IDE
 - Use [Copilot for free](https://dev.to/twizelissa/how-to-enable-github-copilot-for-free-as-student-4kal)
-- Sign up for [GitHub Education](https://education.github.com/) 
+- Sign up for [GitHub Education](https://education.github.com/)
+
+<a name="references"></a>
+## 5. References
+
+Add any references or citations for the resources, papers, or tools you used in your project here.
