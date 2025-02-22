@@ -16,6 +16,11 @@ Add a 1-2 line summary of your project here.
 
 
 ## Video/demo/GIF
+
+| [Video](https://www.google.com) |
+|-----------|
+
+
 Record a short video (1:40 - 2 minutes maximum) or gif or a simple screen recording or even using PowerPoint with audio or with text, showcasing your work.
 
 
