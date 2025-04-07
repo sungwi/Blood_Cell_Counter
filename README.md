@@ -1,22 +1,14 @@
-# SFU CMPT 419 Project Template -- Replace with project title
+# SFU CMPT 419 Project Template -- Group 24: Blood Cell Counter
 This repository is a template for your CMPT 419 course project.
 Replace the title with your project title, and **add a snappy acronym that people remember (mnemonic)**.
 
-Add a 1-2 line summary of your project here.
+Comparative study of deep learning architectures (YOLO and U-Net) to count blood cells in medical images. Our objective, to determine and attempt to increase model performance. Utilized two public Kaggle blood cell datasets to train the models, while manually labeling real medical images for ground truths.
 
-We explore LandingAI to classify medical images, specifically, slices of 3D Medical Images then aggregate their results. We then evaluate performance using classification metrics, and finetune the model to improve its performance.
-
-Deciding on which topic to choose over a Discord meeting on February 22.
 
 ## Important Links
 
 | [Timesheet](https://1sfu-my.sharepoint.com/:x:/g/personal/hamarneh_sfu_ca/ESLM1jsUUh1Ar89Cm5tXbsgB6QWCOIXIvXXyj7QZ4exStQ?e=33fGUC) | [Slack channel](https://app.slack.com/client/T0866LNE29J/C085YA5CCUF) | [Project report](https://www.overleaf.com/project/676b843477fee1c1b96609a4) |
 |-----------|---------------|-------------------------|
-
-
-- Timesheet: Link your timesheet (pinned in your project's Slack channel) where you track per student the time and tasks completed/participated for this project/
-- Slack channel: Link your private Slack project channel.
-- Project report: Link your Overleaf project report document.
 
 
 ## Video/demo/GIF
