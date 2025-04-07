@@ -1,37 +1,60 @@
-import streamlit as st
-from PIL import Image
-import cv2
 import numpy as np
+import cv2
+from ultralytics import YOLO
 
-# Mockup detection function (replace this with your object detection model)
-def detect_cells(image):
-    # Example: Pretend detection logic (replace with real model logic)
-    detected_image = np.array(image).copy()  # Convert PIL image to array
-    cell_count = np.random.randint(50, 150)  # Mock cell count result
+yolo_baseline = YOLO("models/yolo/baseline.pt")
+yolo_extended = ""
+unet_baseline = ""
+unet_extended = ""
 
-    # Example visualization (drawing circles for detected cells)
-    for _ in range(cell_count):
-        x, y = np.random.randint(0, detected_image.shape[1]), np.random.randint(0, detected_image.shape[0])
-        cv2.circle(detected_image, (x, y), 5, (0, 255, 0), -1)
+def detect_cells_yolo_baseline(image):
+    if image.mode != "RGB":
+        image = image.convert("RGB")
 
-    return detected_image, cell_count
+    img_np = np.array(image)
 
-# Streamlit app structure
-st.title("Blood Cell Counter")
+    results = yolo_baseline(img_np)[0]
 
-uploaded_file = st.file_uploader("Upload a blood cell image (JPEG or PNG)", type=["jpeg", "png", "jpg"])
+    boxes = results.boxes.xyxy.cpu().numpy().astype(int)
+    cell_count = len(boxes)
 
-if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    
-    # side-by-side image displays
-    col1, col2 = st.columns(2)
+    for box in boxes:
+        x1, y1, x2, y2 = box
+        cv2.rectangle(img_np, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
-    with col1:
-        st.image(image, caption="Uploaded Image", use_container_width=True)
-    processed_image, cell_count = detect_cells(image)
-    with col2:
-        st.image(processed_image, caption="Processed Image", use_container_width=True)
+    return img_np, cell_count
 
-    # Display cell count
-    st.text(f"Total Cells Detected: {cell_count}")
+def detect_cells_yolo_extended(image):
+    if image.mode != "RGB":
+        image = image.convert("RGB")
+
+    img_np = np.array(image)
+
+    results = yolo_extended(img_np)[0]
+
+    boxes = results.boxes.xyxy.cpu().numpy().astype(int)
+    cell_count = len(boxes)
+
+    for box in boxes:
+        x1, y1, x2, y2 = box
+        cv2.rectangle(img_np, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+    return img_np, cell_count
+
+def detect_cells_unet_baseline(image):
+    if image.mode != "RGB":
+        image = image.convert("RGB")
+
+    img_np = np.array(image)
+
+    #UNET MODEL LOGIC
+    return img_np, cell_count
+
+def detect_cells_unet_extended(image):
+    if image.mode != "RGB":
+        image = image.convert("RGB")
+
+    img_np = np.array(image)
+
+    #UNET MODEL LOGIC
+    return img_np, cell_count
