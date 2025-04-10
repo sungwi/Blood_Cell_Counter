@@ -21,7 +21,7 @@ def main():
 
 
 def yolo_base():
-    st.subheader("YOLOv8n model: Trained on 300 medical images")
+    st.subheader("YOLOv8n base model: Trained on 100 medical images")
     uploaded_file = st.file_uploader("Upload a blood cell image (JPEG or PNG)", type=["jpeg", "png", "jpg"])
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
@@ -37,7 +37,7 @@ def yolo_base():
         st.text(f"Total Cells Detected: {cell_count}")
 
 def yolo_extended():
-    st.subheader("YOLOv8n model: Trained on 1000 medical images")
+    st.subheader("YOLOv8n extended model: Trained on 366 medical images")
     uploaded_file = st.file_uploader("Upload a blood cell image (JPEG or PNG)", type=["jpeg", "png", "jpg"])
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
@@ -53,11 +53,27 @@ def yolo_extended():
         st.text(f"Total Cells Detected: {cell_count}")
 
 def unet_base():
-    cell_count = -1
-    st.text(f"Total Cells Detected: {cell_count}")
+    st.subheader("UNET baseline model: Trained on 100 emdical images")
+    uploaded_file = st.file_uploader("Upload a blood cell image (JPEG or PNG)", type=["jpeg", "png", "jpg"])
+    
+    if uploaded_file is not None:
+
+        image = Image.open(uploaded_file).convert("RGB")
+        image = np.array(image)
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.image(image, caption="Uploaded Image", use_container_width=True, channels="BGR")
+        processed_image, cell_count = detect_cells_unet_extended(image)
+        with col2:
+            st.image(processed_image, caption="Processed Image", use_container_width=True, channels="BGR")
+
+        st.text(f"Total Cells Detected: {cell_count}")
 
 def unet_extended():
-    st.subheader("unet-extended")
+    st.subheader("UNET extended model: Trained on 366 medical images")
     uploaded_file = st.file_uploader("Upload a blood cell image (JPEG or PNG)", type=["jpeg", "png", "jpg"])
     
     if uploaded_file is not None:
