@@ -51,15 +51,28 @@ src
 ## 1. Installation
 
 ### Requirments:
-```python
-Python 3.7 or later
-Streamlit
-```
+All required packages are listed in `requirements.txt`. Install them with:
+
 
 ### Installation:
-```python
-pip install streamlit
+```bash
+pip install -r requirements.txt
 ```
+
+Create and Activate Virtual Environment
+
+Windows:
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+Linux/macOS:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
 
 <a name="installation"></a>
 
@@ -79,31 +92,48 @@ streamlit run cell_count_streamlit.py
 This will launch this projects streamlit user interface where you can select the different models on the drop down locted on the left hand side and upload medical images to count the cells.
 
 <a name="repro"></a>
-## 3. Reproduction
-Demonstrate how your work can be reproduced, e.g. the results in your report.
+
+## 3 Reproduction
+
+### 3.1 YOLO Reproduction
+
+### 3.2 Unet Reproduction
+
+### Train the U-Net Model
 ```bash
-mkdir tmp && cd tmp
-wget https://yourstorageisourbusiness.com/dataset.zip
-unzip dataset.zip
-conda activate amazing
-python evaluate.py --epochs=10 --data=/in/put/dir
+python train_baseline_unet.py
 ```
-Data can be found at ...
-Output will be saved in ...
+Make sure to set: --dataset_path: for the path to the dataset_2/processed dataset file to recreate baseline unet model (default: "dataset_2/processed/")
+
+Optional arguments:
+
+--output_dir: Directory to save model and results (default: current directory)
+
+--batch_size : Batch size for training (default: 8)
+
+--epochs : Number of training epochs (default: 50)
+
+--img_size : Image size for processing (default: 256)
+
+--model_name: Name of the output model file (default: "baseline_unet.h5")
+
+### B. Run Cell Detection
+```bash
+python run_detection.py --model_path 
+```
+Command line parameters for:
+--model_path: Path to the model file
+--dataset_path: Path to the image dataset
+--output_dir: Directory to save results
+
+### C. Compare with Manual Counts
+```bash
+python compare_cell_counts.py --manual_dir path/to/dataset_2 --detection_dir cell_detection_results --output_dir comparison_output
+```
+Generates performance metrics and visualizations comparing automated and manual counts.
 
 <a name="guide"></a>
-## 4. Guidance
 
-- Use [git](https://git-scm.com/book/en/v2)
-    - Do NOT use history re-editing (rebase)
-    - Commit messages should be informative:
-        - No: 'this should fix it', 'bump' commit messages
-        - Yes: 'Resolve invalid API call in updating X'
-    - Do NOT include IDE folders (.idea), or hidden files. Update your .gitignore where needed.
-    - Do NOT use the repository to upload data
-- Use [VSCode](https://code.visualstudio.com/) or a similarly powerful IDE
-- Use [Copilot for free](https://dev.to/twizelissa/how-to-enable-github-copilot-for-free-as-student-4kal)
-- Sign up for [GitHub Education](https://education.github.com/)
 
 <a name="references"></a>
 ## 5. References
