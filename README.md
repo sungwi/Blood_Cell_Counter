@@ -94,6 +94,51 @@ This will launch this projects streamlit user interface where you can select the
 
 ### 3.1 YOLO Reproduction
 
+- **(A) Baseline Training** — Generate pseudo-annotations and train a baseline model.
+- **(B) Extended Training** — Re-train using additional annotated dataset (VOC format)
+
+#### A. Train Baseline Model
+
+##### Generate YOLO Annotations
+```bash
+python generate_annotations.py
+```
+Generates YOLO-format .txt annotations in ```src/yolo_model/annotation/{cell_type}/```.
+
+
+##### Prepare Dataset for Training
+```bash
+python prepare_yolo.py
+```
+Creates training/validation splits in YOLO-compatible format:
+- Images → ```src/yolo_model/data/images/{train,val}```
+- Labels → ```src/yolo_model/data/labels/{train,val}```
+
+#####  Train Baseline YOLO Model
+```bash
+python train_yolo.py
+```
+Trains a YOLOv8 baseline model using ```yolo_1.yml``` as config.
+Results saved to ```src/yolo_model/models/runs/cell_detection/```.
+
+#### B. Train Extended Model
+
+##### Convert VOC to YOLO Format (for Extended Training)
+```bash
+python convert_xml_to_txt.py
+```
+Converts VOC-style XML annotations (```src/data_processing/dataset_1/annotations/```) into YOLO .txt format.
+Output goes to ```src/yolo_model/data_2/labels/```.
+
+
+##### Extend yolo-model
+```bash
+python train_yolo_2.py
+```
+Fine-tunes the previously trained model (best.pt) using extended annotations.
+Uses ```yolo_2.yml``` and outputs to ```src/yolo_model/models/runs_finetune/cell_detection_finetuned/```.
+
+
 ### 3.2 Unet Reproduction
 
 ### Train the U-Net Model
