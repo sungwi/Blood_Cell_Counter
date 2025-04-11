@@ -5,30 +5,10 @@ import random
 def prepare_yolo_dataset():
     """Prepare the dataset for YOLO training by organizing images and annotations."""
     
-    # Define directories
-    raw_dirs = [
-        f'../data_processing/datasets/dataset_2/raw/basophil',
-        f'../data_processing/datasets/dataset_2/raw/eosinophil',
-        f'../data_processing/datasets/dataset_2/raw/erythroblast'
-    ]
+    cell_types = ['basophil', 'eosinophil', 'erythroblast', 'lymphocyte', 'monocyte', 'neutrophil', 'platelet']
     
-    augmented_dirs = [
-        f'./augmented/basophil',
-        f'./augmented/eosinophil',
-        f'./augmented/erythroblast'
-    ]
-    
-    annotation_dirs = [
-        f'./annotations/basophil',
-        f'./annotations/eosinophil',
-        f'./annotations/erythroblast'
-    ]
-    
-    augmented_annotation_dirs = [
-        f'./annotations/basophil_augmented',
-        f'./annotations/eosinophil_augmented',
-        f'./annotations/erythroblast_augmented'
-    ]
+    raw_dirs = [f'../data_processing/datasets/dataset_2/raw/{ct}' for ct in cell_types]
+    annotation_dirs = [f'./annotations/{ct}' for ct in cell_types]
     
     # Create YOLO dataset structure
     train_img_dir = f'./data/images/train'
@@ -36,18 +16,31 @@ def prepare_yolo_dataset():
     train_label_dir = f'./data/labels/train'
     val_label_dir = f'./data/labels/val'
     
-    os.makedirs(train_img_dir, exist_ok=True)
-    os.makedirs(val_img_dir, exist_ok=True)
-    os.makedirs(train_label_dir, exist_ok=True)
-    os.makedirs(val_label_dir, exist_ok=True)
+    # Create directories
+    for dir_path in [train_img_dir, val_img_dir, train_label_dir, val_label_dir]:
+        os.makedirs(dir_path, exist_ok=True)
+        for f in os.listdir(dir_path):
+            file_path = os.path.join(dir_path, f)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
     
-    # Collect all images with annotations
-    for i, (raw_dir, annotation_dir) in enumerate(zip(raw_dirs, annotation_dirs)):
-        cell_type = os.path.basename(raw_dir)
-        print(f"Processing {cell_type} raw data...")
+    print("Cleaned and created dataset directories")
+    
+    # Process each cell type
+    for cell_type, raw_dir, annotation_dir in zip(cell_types, raw_dirs, annotation_dirs):
+        print(f"\nProcessing {cell_type}...")
+        
+        # Check if directories exist
+        if not os.path.exists(raw_dir):
+            print(f"Warning: Raw directory {raw_dir} does not exist")
+            continue
+            
+        if not os.path.exists(annotation_dir):
+            print(f"Warning: Annotation directory {annotation_dir} does not exist")
+            continue
         
         # Get image files that have corresponding annotation files
-        image_files = []
+        valid_images = []
         for img_file in os.listdir(raw_dir):
             if not img_file.lower().endswith(('.jpg', '.jpeg', '.png')):
                 continue
@@ -56,43 +49,84 @@ def prepare_yolo_dataset():
             label_path = os.path.join(annotation_dir, label_file)
             
             if os.path.exists(label_path):
-                image_files.append(img_file)
+                valid_images.append(img_file)
+            else:
+                print(f"Skipping {img_file} - no annotation found")
         
-        # Split into train/val (we'll use the raw images as val, augmented as train)
-        for img_file in image_files:
+        print(f"Found {len(valid_images)} valid images with annotations for {cell_type}")
+        
+        if not valid_images:
+            continue
+        
+        # Split into training and validation sets (80/20 split)
+        random.shuffle(valid_images)
+        split_idx = int(len(valid_images) * 0.8)
+        train_images = valid_images[:split_idx]
+        val_images = valid_images[split_idx:]
+        
+        print(f"Split: {len(train_images)} training images, {len(val_images)} validation images")
+        
+        # Copy training images and labels
+        for img_file in train_images:
             img_path = os.path.join(raw_dir, img_file)
             label_file = os.path.splitext(img_file)[0] + '.txt'
             label_path = os.path.join(annotation_dir, label_file)
             
-            # Copy to validation set
-            shutil.copy(img_path, os.path.join(val_img_dir, f"{cell_type}_{img_file}"))
-            shutil.copy(label_path, os.path.join(val_label_dir, f"{cell_type}_{label_file}"))
-    
-    # Process augmented data for training
-    for i, (aug_dir, aug_annotation_dir) in enumerate(zip(augmented_dirs, augmented_annotation_dirs)):
-        cell_type = os.path.basename(aug_dir).replace('_augmented', '')
-        print(f"Processing {cell_type} augmented data...")
-        
-        # Get augmented image files with annotations
-        for img_file in os.listdir(aug_dir):
-            if not img_file.lower().endswith(('.jpg', '.jpeg', '.png')):
-                continue
-                
-            label_file = os.path.splitext(img_file)[0] + '.txt'
-            label_path = os.path.join(aug_annotation_dir, label_file)
+            # Add cell type prefix to avoid naming conflicts
+            train_img_name = f"{cell_type}_{img_file}"
+            train_label_name = f"{cell_type}_{label_file}"
             
-            if os.path.exists(label_path):
-                # Copy to training set
-                shutil.copy(os.path.join(aug_dir, img_file), os.path.join(train_img_dir, f"{cell_type}_{img_file}"))
-                shutil.copy(label_path, os.path.join(train_label_dir, f"{cell_type}_{label_file}"))
+            shutil.copy(img_path, os.path.join(train_img_dir, train_img_name))
+            shutil.copy(label_path, os.path.join(train_label_dir, train_label_name))
+        
+        # Copy validation images and labels
+        for img_file in val_images:
+            img_path = os.path.join(raw_dir, img_file)
+            label_file = os.path.splitext(img_file)[0] + '.txt'
+            label_path = os.path.join(annotation_dir, label_file)
+            
+            # Add cell type prefix to avoid naming conflicts
+            val_img_name = f"{cell_type}_{img_file}"
+            val_label_name = f"{cell_type}_{label_file}"
+            
+            shutil.copy(img_path, os.path.join(val_img_dir, val_img_name))
+            shutil.copy(label_path, os.path.join(val_label_dir, val_label_name))
     
-    # Count images
-    train_count = len(os.listdir(train_img_dir))
-    val_count = len(os.listdir(val_img_dir))
+    # Count final dataset
+    train_images = os.listdir(train_img_dir)
+    train_labels = os.listdir(train_label_dir)
+    val_images = os.listdir(val_img_dir)
+    val_labels = os.listdir(val_label_dir)
     
     print(f"\nDataset prepared for YOLO training:")
-    print(f"Training images: {train_count}")
-    print(f"Validation images: {val_count}")
+    print(f"Training: {len(train_images)} images, {len(train_labels)} labels")
+    print(f"Validation: {len(val_images)} images, {len(val_labels)} labels")
+    
+    # Verify label-image matching
+    train_mismatches = set([f.replace('.txt', '') for f in train_labels]) - set([os.path.splitext(f)[0] for f in train_images])
+    val_mismatches = set([f.replace('.txt', '') for f in val_labels]) - set([os.path.splitext(f)[0] for f in val_images])
+    
+    if train_mismatches:
+        print(f"\nWarning: {len(train_mismatches)} training labels without matching images")
+        print(f"First few: {list(train_mismatches)[:5]}")
+    
+    if val_mismatches:
+        print(f"Warning: {len(val_mismatches)} validation labels without matching images")
+        print(f"First few: {list(val_mismatches)[:5]}")
+    
+    # Print sample images by cell type
+    print("\nSample images in training set:")
+    for cell_type in cell_types:
+        type_images = [f for f in train_images if f.startswith(f"{cell_type}_")]
+        if type_images:
+            print(f"  {cell_type}: {len(type_images)} images, e.g., {type_images[:3]}")
+    
+    print("\nSample images in validation set:")
+    for cell_type in cell_types:
+        type_images = [f for f in val_images if f.startswith(f"{cell_type}_")]
+        if type_images:
+            print(f"  {cell_type}: {len(type_images)} images, e.g., {type_images[:3]}")
 
 if __name__ == "__main__":
+    random.seed(42)
     prepare_yolo_dataset()

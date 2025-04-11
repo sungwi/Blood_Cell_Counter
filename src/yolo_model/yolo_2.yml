@@ -1,0 +1,7 @@
+# Fine-Tuning
+path: src/yolo_model/data_2
+train: images
+val: images
+
+names:
+  0: cell

@@ -1,25 +1,21 @@
 import os
-import yaml
 import subprocess
 
 def train_yolo_model():
     """Train a YOLOv8 model on the prepared dataset."""
     
-    # Define paths
-    yaml_path = f'./yolo.yml'
+    yaml_path = f'./yolo_1.yml'
     output_dir = f'./models/runs'
     
-    # Create output directory
     os.makedirs(output_dir, exist_ok=True)
     
-    # Train YOLOv8 model
     print("Starting YOLOv8 training...")
     subprocess.run([
         'yolo', 'train',
         'task=detect',
         f'data={yaml_path}',
-        'model=yolov8n.pt',  # Use nano model for faster training
-        'epochs=100',
+        'model=yolov8n.pt',
+        'epochs=50',
         'imgsz=640',
         'batch=16',
         'patience=20',

@@ -5,9 +5,9 @@ def fine_tune_yolo_model():
     """Fine-tune YOLOv8 model on new dataset (data_2)."""
     
     # Define paths
-    yaml_path = './yolo.yml'  # Updated yolo.yml pointing to data_2
+    yaml_path = './yolo_2.yml'
     output_dir = './models/runs_finetune'
-    pretrained_weights = './models/runs/cell_detection4/weights/best.pt'  # from previous training
+    pretrained_weights = './models/runs/cell_detection/weights/best.pt'
     
     os.makedirs(output_dir, exist_ok=True)
 

@@ -27,9 +27,8 @@ def convert_annotation(xml_path, output_path, class_mapping=None):
         output_path: path to output TXT file
         class_mapping: dictionary mapping class names to class IDs
     """
-    # Default class mapping if none provided
     if class_mapping is None:
-        class_mapping = {"cell": 0, "RBC": 0, "WBC": 0}  # Map all cell types to class 0
+        class_mapping = {"cell": 0, "RBC": 0, "WBC": 0}
     
     try:
         tree = ET.parse(xml_path)
@@ -41,7 +40,6 @@ def convert_annotation(xml_path, output_path, class_mapping=None):
         print(f"XML file not found: {xml_path}")
         return False
     
-    # Get image size
     size_elem = root.find("size")
     if size_elem is None:
         print(f"Size element not found in {xml_path}")
@@ -94,15 +92,10 @@ def convert_annotation(xml_path, output_path, class_mapping=None):
         return found_objects
 
 if __name__ == "__main__":
-    # Define your class mapping
     class_mapping = {
         "RBC": 0,      # Red blood cells
         "cell": 0,     # General cell
         "WBC": 0,      # White blood cells
-        # Add more classes if needed:
-        # "basophil": 0,
-        # "eosinophil": 0,
-        # "erythroblast": 0
     }
     
     input_dir = "../data_processing/datasets/dataset_1/annotations"

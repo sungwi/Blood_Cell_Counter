@@ -1,14 +1,1 @@
-../../runs/
-
-./data_vol1/
-./annotations/
-./annotations_vol1/
-./data/
-
-./models/runs/cell_detection/
-./models/runs/cell_detection2/
-./models/runs/cell_detection3/
-
-./augmented/
-
-../data_processing/datasets/dataset_2/augmented/
+./models/

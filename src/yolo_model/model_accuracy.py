@@ -1,9 +1,26 @@
 import os
 import csv
 import glob
+import warnings
+import re
+
+# Suppress urllib3 SSL warnings that don't affect functionality
+warnings.filterwarnings("ignore", category=UserWarning, module="urllib3")
+
 from ultralytics import YOLO
 import cv2
 import numpy as np
+
+def extract_first_number(value_str):
+    """Extract the first number from a string like '1 (2)'."""
+    if not value_str or not isinstance(value_str, str):
+        return 0
+    
+    # Find the first number in the string
+    numbers = re.findall(r'\d+', value_str)
+    if numbers:
+        return int(numbers[0])
+    return 0
 
 def load_ground_truth(csv_path):
     """Load ground truth cell counts from CSV file."""
@@ -21,30 +38,44 @@ def load_ground_truth(csv_path):
                 if i < 5:  # Print first 5 rows for debugging
                     print(f"Row {i+1}: {row}")
                 
-                if 'image_name' not in row or not row['image_name']:
+                if 'image_name' not in row or not row['image_name'] or not any(row.values()):
                     continue
                     
                 image_name = row['image_name']
                 
-                # Extract cell counts, handling different CSV formats
-                rbc = int(row.get('red_blood_cells', 0)) if row.get('red_blood_cells', '') else 0
-                wbc = int(row.get('white_blood cells', 0)) if row.get('white_blood cells', '') else 0
-                ambiguous = int(row.get('ambiguous', 0)) if row.get('ambiguous', '') else 0
+                # Extract cell counts, handling different CSV formats with error handling
+                try:
+                    rbc = int(row.get('red_blood_cells', 0)) if row.get('red_blood_cells', '') else 0
+                except ValueError:
+                    rbc = extract_first_number(row.get('red_blood_cells', ''))
                 
-                # You commented out ambiguous cells - let's include them
-                #total_count = rbc + wbc + ambiguous
-                total_count = wbc
-                cell_counts[image_name] = total_count
+                try:
+                    wbc_val = row.get('white_blood cells', '')
+                    wbc = extract_first_number(wbc_val) if wbc_val else 0
+                except Exception:
+                    wbc = 0
                 
-                # Also store without file extension for more flexible matching
+                try:
+                    ambiguous = int(row.get('ambiguous', 0)) if row.get('ambiguous', '') else 0
+                except ValueError:
+                    ambiguous = extract_first_number(row.get('ambiguous', ''))
+                
+                # Calculate total count
+                total_count = rbc + wbc + ambiguous
+                
+                # Store multiple variations of the filename to make matching easier
+                cell_counts[image_name] = total_count  # Original: "Cell_0001.jpg"
+                cell_counts[image_name.lower()] = total_count  # Lowercase: "cell_0001.jpg"
+                
+                # Also store without extension
                 name_without_ext = os.path.splitext(image_name)[0]
-                if name_without_ext != image_name:
-                    cell_counts[name_without_ext] = total_count
+                cell_counts[name_without_ext] = total_count  # Without extension: "Cell_0001"
+                cell_counts[name_without_ext.lower()] = total_count  # Lowercase without extension: "cell_0001"
             
-            print(f"Loaded {len(cell_counts)} image entries from ground truth")
+            print(f"Loaded {len(cell_counts) // 4} image entries from ground truth")
             
             # Print some sample entries
-            sample_keys = list(cell_counts.keys())[:5]
+            sample_keys = [k for k in cell_counts.keys() if not k.lower().startswith("cell_")][:5]
             for key in sample_keys:
                 print(f"Sample GT: {key} = {cell_counts[key]} cells")
     
@@ -73,14 +104,14 @@ def validate_cell_counting(model_path, val_img_dir, ground_truth_csv, cell_type,
     total_predicted_cells = 0
     total_absolute_error = 0
     
-    # Process each image
-    image_files = glob.glob(os.path.join(val_img_dir, f"{cell_type}_*.jpg")) + \
-                 glob.glob(os.path.join(val_img_dir, f"{cell_type}_*.jpeg")) + \
-                 glob.glob(os.path.join(val_img_dir, f"{cell_type}_*.png"))
+    # Process each image - look for images with the cell type prefix
+    image_files = glob.glob(os.path.join(val_img_dir, f"{cell_type.lower()}_*.jpg")) + \
+                 glob.glob(os.path.join(val_img_dir, f"{cell_type.lower()}_*.jpeg")) + \
+                 glob.glob(os.path.join(val_img_dir, f"{cell_type.lower()}_*.png"))
     
     print(f"Found {len(image_files)} validation images for {cell_type}")
     
-    # If no images with prefix, try without prefix
+    # If no images with prefix, try with cell type in filename
     if not image_files:
         print("No prefixed images found, searching for any matching images...")
         all_files = glob.glob(os.path.join(val_img_dir, "*.jpg")) + \
@@ -90,14 +121,6 @@ def validate_cell_counting(model_path, val_img_dir, ground_truth_csv, cell_type,
         # Filter files that might belong to this cell type
         image_files = [f for f in all_files if cell_type.lower() in os.path.basename(f).lower()]
         print(f"Found {len(image_files)} possible {cell_type} images by name matching")
-    
-    # If still no images, use any images
-    if not image_files:
-        print("Still no images found, using all validation images...")
-        image_files = glob.glob(os.path.join(val_img_dir, "*.jpg")) + \
-                     glob.glob(os.path.join(val_img_dir, "*.jpeg")) + \
-                     glob.glob(os.path.join(val_img_dir, "*.png"))
-        print(f"Using {len(image_files)} total validation images")
     
     # Write a list of validation image names for debugging
     with open(os.path.join(debug_dir, f"{cell_type}_validation_images.txt"), 'w') as f:
@@ -109,19 +132,31 @@ def validate_cell_counting(model_path, val_img_dir, ground_truth_csv, cell_type,
         img_name = os.path.basename(img_path)
         img_name_no_ext = os.path.splitext(img_name)[0]
         
-        # Try different name variations to match with ground truth
-        name_variations = [
-            img_name,                              # Full filename with extension
-            img_name_no_ext,                       # Filename without extension
-            img_name.replace(f"{cell_type}_", ""), # Without cell type prefix
-            img_name_no_ext.replace(f"{cell_type}_", ""), # Without prefix or extension
-            f"{img_name_no_ext}.tif",              # Try .tif extension (common in microscopy)
-            f"{img_name_no_ext.replace(f'{cell_type}_', '')}.tif" # No prefix, tif extension
-        ]
+        # For matching with ground truth, extract the part after cell_type_
+        if cell_type.lower() + "_" in img_name.lower():
+            # This handles cases like basophil_Basophil_0001.jpg -> Basophil_0001.jpg
+            base_name = img_name.split(cell_type.lower() + "_", 1)[1]
+            base_name_no_ext = os.path.splitext(base_name)[0]
+        else:
+            # If no prefix, use the full name
+            base_name = img_name
+            base_name_no_ext = img_name_no_ext
         
-        # Find matching ground truth
+        # Find matching ground truth - first try the unprefixed name
         gt_count = None
         matched_name = None
+        
+        # Try different variations to match with ground truth
+        name_variations = [
+            base_name,                      # Original unprefixed name: Basophil_0001.jpg
+            base_name_no_ext,               # Without extension: Basophil_0001
+            base_name.lower(),              # Lowercase: basophil_0001.jpg
+            base_name_no_ext.lower(),       # Lowercase without extension: basophil_0001
+            img_name,                       # Full name with prefix
+            img_name_no_ext,                # Full name without extension
+            img_name.lower(),               # Full name lowercase
+            img_name_no_ext.lower()         # Full name lowercase without extension
+        ]
         
         for name_var in name_variations:
             if name_var in gt_counts:
@@ -129,10 +164,8 @@ def validate_cell_counting(model_path, val_img_dir, ground_truth_csv, cell_type,
                 matched_name = name_var
                 break
         
-        # Skip images without ground truth
+        # Skip images without ground truth silently
         if gt_count is None:
-            print(f"Warning: No ground truth found for {img_name}")
-            print(f"Tried variations: {name_variations}")
             continue
         
         # Load image for visualization
@@ -235,23 +268,24 @@ def validate_cell_counting(model_path, val_img_dir, ground_truth_csv, cell_type,
             print(f"Conf {conf}: {pred_cells_at_conf} cells, Accuracy: {accuracy_at_conf:.2f}%")
         
         # Sort images by error percentage to find worst cases
-        results.sort(key=lambda x: x['error_percent'], reverse=True)
+        if results:
+            results.sort(key=lambda x: x['error_percent'], reverse=True)
+            
+            print("\nWorst 5 images by error percentage:")
+            for i, r in enumerate(results[:5]):
+                print(f"{i+1}. {r['image']}: GT={r['ground_truth']}, Pred={r['predicted']}, Error={r['error_percent']:.1f}%")
         
-        print("\nWorst 5 images by error percentage:")
-        for i, r in enumerate(results[:5]):
-            print(f"{i+1}. {r['image']}: GT={r['ground_truth']}, Pred={r['predicted']}, Error={r['error_percent']:.1f}%")
-        
-        # Write detailed results to CSV
-        csv_file = os.path.join(debug_dir, f"cell_counting_validation_{cell_type}.csv")
-        with open(csv_file, 'w', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=[
-                'image', 'matched_gt_name', 'ground_truth', 'predicted', 
-                'error', 'error_percent', 'conf_0.1', 'conf_0.25', 'conf_0.5', 'conf_0.75'
-            ])
-            writer.writeheader()
-            writer.writerows(results)
-        
-        print(f"Detailed results saved to {csv_file}")
+            # Write detailed results to CSV
+            csv_file = os.path.join(debug_dir, f"cell_counting_validation_{cell_type}.csv")
+            with open(csv_file, 'w', newline='') as f:
+                writer = csv.DictWriter(f, fieldnames=[
+                    'image', 'matched_gt_name', 'ground_truth', 'predicted', 
+                    'error', 'error_percent', 'conf_0.1', 'conf_0.25', 'conf_0.5', 'conf_0.75'
+                ])
+                writer.writeheader()
+                writer.writerows(results)
+            
+            print(f"Detailed results saved to {csv_file}")
         
         return {
             'cell_type': cell_type,
@@ -260,34 +294,141 @@ def validate_cell_counting(model_path, val_img_dir, ground_truth_csv, cell_type,
             'total_predicted_cells': total_predicted_cells,
             'mean_absolute_error': mean_absolute_error,
             'accuracy_percent': accuracy_percent,
-            'conf_results': {conf: sum(r[f'conf_{conf}'] for r in results) for conf in confidence_levels}
+            'conf_results': {conf: sum(r[f'conf_{conf}'] for r in results) for conf in confidence_levels} if results else {}
         }
     else:
         print(f"No matching images found for {cell_type}")
         return None
 
 if __name__ == "__main__":
-    # Update these paths to match your environment
-    model_path = "./models/runs/cell_detection4/weights/best.pt"
-    val_img_dir = "./data/images/val"
-    ground_truth_dir = "../data_processing/datasets/dataset_2/ground_truth"
+    try:
+        print("Starting model accuracy evaluation...")
+        
+        # Update these paths to match your environment
+       # model_path = "./models/runs/cell_detection/weights/best.pt"
+        model_path = "./models/runs_finetune/cell_detection_finetuned/weights/best.pt"
+        val_img_dir = "./data/images/val"
+        
+        # Check if model exists
+        if not os.path.exists(model_path):
+            print(f"ERROR: Model file not found at {model_path}")
+            # Try to find any model weight files
+            possible_models = glob.glob("./models/**/best.pt", recursive=True)
+            if possible_models:
+                print(f"Found possible model weights at: {possible_models[0]}")
+                model_path = possible_models[0]
+                print(f"Using model: {model_path}")
+            else:
+                print("No model files found. Please check the model path.")
+                exit(1)
+        else:
+            print(f"Model found at {model_path}")
+        
+        # Check if validation directory exists
+        if not os.path.exists(val_img_dir):
+            print(f"ERROR: Validation directory not found at {val_img_dir}")
+            # Try to find any validation image directory
+            if os.path.exists("./data"):
+                print("Contents of ./data directory:")
+                for item in os.listdir("./data"):
+                    print(f"  - {item}")
+            exit(1)
+        else:
+            # Count validation images
+            val_images = glob.glob(os.path.join(val_img_dir, "*.jpg")) + \
+                         glob.glob(os.path.join(val_img_dir, "*.jpeg")) + \
+                         glob.glob(os.path.join(val_img_dir, "*.png"))
+            print(f"Found {len(val_images)} images in validation directory")
+            if val_images:
+                print(f"Sample validation images: {[os.path.basename(img) for img in val_images[:3]]}")
+        
+        # Cell types to evaluate
+        cell_types = [
+            'basophil', 'eosinophil', 'erythroblast', 
+            'Immunoglobulin', 'lymphocyte', 'Monocyte', 
+            'Neutrophil', 'Platelet'
+        ]
+        
+        
+        # Ground truth directories
+        ground_truth_dir = "../data_processing/datasets/dataset_2"
+        alt_ground_truth_dir = "../data_processing/datasets/dataset_2/ground_truth"
+        
+        # Verify ground truth directory exists
+        if not os.path.exists(ground_truth_dir):
+            print(f"WARNING: Ground truth directory not found at {ground_truth_dir}")
+            if os.path.exists(alt_ground_truth_dir):
+                print(f"Using alternative ground truth directory: {alt_ground_truth_dir}")
+                ground_truth_dir = alt_ground_truth_dir
+            else:
+                print("ERROR: No ground truth directories found")
+                # Try to locate any CSV files in nearby directories
+                for root, dirs, files in os.walk(".."):
+                    csv_files = [f for f in files if f.endswith('.csv')]
+                    if csv_files:
+                        print(f"Found CSV files in {root}: {csv_files}")
+                exit(1)
+        
+        # Find all CSV files
+        csv_files = glob.glob(os.path.join(ground_truth_dir, "*.csv"))
+        if not csv_files:
+            print(f"ERROR: No CSV files found in {ground_truth_dir}")
+            exit(1)
+        else:
+            print(f"Found {len(csv_files)} CSV files in {ground_truth_dir}")
+            for csv_file in csv_files:
+                print(f"  - {os.path.basename(csv_file)}")
+        
+        # Create debug output directory
+        os.makedirs("./debug_output", exist_ok=True)
+        
+        # Default confidence threshold
+        conf_threshold = 0.25
+        
+        # Run validation for each cell type
+        print("\nStarting validation for each cell type...")
+        overall_results = {}
+        
+        for cell_type in cell_types:
+            try:
+                print(f"\n{'='*60}")
+                print(f"PROCESSING {cell_type.upper()}")
+                print(f"{'='*60}")
+                
+                # Find matching CSV file
+                csv_path = None
+                for csv_file in csv_files:
+                    if cell_type.lower() in os.path.basename(csv_file).lower():
+                        csv_path = csv_file
+                        print(f"Found CSV file: {os.path.basename(csv_path)}")
+                        break
+                
+                if csv_path:
+                    result = validate_cell_counting(model_path, val_img_dir, csv_path, cell_type, conf_threshold)
+                    if result:
+                        overall_results[cell_type] = result
+                else:
+                    print(f"No CSV file found for {cell_type}, skipping")
+            except Exception as e:
+                print(f"ERROR processing {cell_type}: {e}")
+                import traceback
+                traceback.print_exc()
+        
+        if overall_results:
+            print("\n\n" + "="*80)
+            print("OVERALL VALIDATION SUMMARY")
+            print("="*80)
+            print(f"{'Cell Type':<15} | {'Images':<7} | {'GT Cells':<10} | {'Pred Cells':<10} | {'Accuracy':<10} | {'MAE':<10}")
+            print("-"*80)
+            
+            for cell_type, result in overall_results.items():
+                print(f"{cell_type:<15} | {result['total_images']:<7} | {result['total_gt_cells']:<10} | "
+                      f"{result['total_predicted_cells']:<10} | {result['accuracy_percent']:.2f}% | "
+                      f"{result['mean_absolute_error']:.2f}")
+        else:
+            print("\nNo validation results generated. Please check the errors above.")
     
-    # Create debug output directory
-    os.makedirs("./debug_output", exist_ok=True)
-    
-    # Default confidence threshold - you might need to adjust this
-    conf_threshold = 0.25
-    
-    # Test with a single cell type first
-    cell_type = 'basophil'
-    csv_path = next(
-        (os.path.join(ground_truth_dir, f) for f in os.listdir(ground_truth_dir) 
-         if f.lower().endswith('.csv') and cell_type.lower() in f.lower()), 
-        None
-    )
-    
-    if csv_path:
-        print(f"Testing {cell_type} with {os.path.basename(csv_path)}")
-        validate_cell_counting(model_path, val_img_dir, csv_path, cell_type, conf_threshold)
-    else:
-        print(f"No CSV file found for {cell_type}")
+    except Exception as e:
+        print(f"ERROR in main execution: {e}")
+        import traceback
+        traceback.print_exc()
