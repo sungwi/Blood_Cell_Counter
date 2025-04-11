@@ -66,7 +66,7 @@ def unet_base():
 
         with col1:
             st.image(image, caption="Uploaded Image", use_container_width=True, channels="BGR")
-        processed_image, cell_count = detect_cells_unet_extended(image)
+        processed_image, cell_count = detect_cells_unet_baseline(image)
         with col2:
             st.image(processed_image, caption="Processed Image", use_container_width=True, channels="BGR")
 
