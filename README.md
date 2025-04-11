@@ -100,7 +100,7 @@ This will launch this projects streamlit user interface where you can select the
 #### Setup
 Navigate to the YOLO directory:
 ```bash
-cd ../yolo_model
+cd src/yolo_model
 ```
 
 #### A. Train Baseline Model
