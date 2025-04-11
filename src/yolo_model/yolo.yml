@@ -1,0 +1,6 @@
+path: src/yolo_model/data
+train: images/train
+val: images/val
+
+names:
+  0: cell
