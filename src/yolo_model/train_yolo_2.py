@@ -2,7 +2,7 @@ import os
 import subprocess
 
 def fine_tune_yolo_model():
-    """Fine-tune YOLOv8 model on new dataset (data_2)."""
+    """Extended YOLOv8 model on dataset (data_2)."""
     
     # Define paths
     yaml_path = './yolo_2.yml'

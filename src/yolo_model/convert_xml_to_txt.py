@@ -3,13 +3,6 @@ import xml.etree.ElementTree as ET
 
 def convert_bbox(size, box):
     """Convert bounding box from VOC format to YOLO format.
-    
-    Args:
-        size: tuple of (width, height) of the image
-        box: tuple of (xmin, ymin, xmax, ymax)
-        
-    Returns:
-        tuple of (x_center, y_center, width, height) normalized
     """
     dw = 1.0 / size[0]  # width normalization
     dh = 1.0 / size[1]  # height normalization
@@ -21,11 +14,6 @@ def convert_bbox(size, box):
 
 def convert_annotation(xml_path, output_path, class_mapping=None):
     """Convert annotation from VOC XML format to YOLO txt format.
-    
-    Args:
-        xml_path: path to XML file
-        output_path: path to output TXT file
-        class_mapping: dictionary mapping class names to class IDs
     """
     if class_mapping is None:
         class_mapping = {"cell": 0, "RBC": 0, "WBC": 0}

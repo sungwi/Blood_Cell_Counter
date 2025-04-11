@@ -239,14 +239,6 @@ def segment_cells(image, params):
     """
     Segment cells in an image using watershed algorithm.
     Uses your existing segmentation approach.
-    
-    Args:
-        image: Input image
-        params: Dictionary of segmentation parameters
-    
-    Returns:
-        bboxes: List of bounding boxes (x, y, w, h)
-        count: Number of cells detected
     """
     # Convert to grayscale if needed
     if len(image.shape) == 3:
@@ -313,8 +305,6 @@ def check_and_create_raw_dir(cell_type):
 def find_and_copy_images(cell_type):
     """Find images for a cell type and copy them to raw directory."""
     raw_dir = check_and_create_raw_dir(cell_type)
-    
-    # Check various possible directory paths with different capitalizations
     possible_dirs = [
         f'../data_processing/datasets/dataset_2/raw/{cell_type}',
         f'../data_processing/datasets/dataset_2/raw/{cell_type.capitalize()}',
@@ -428,7 +418,6 @@ if __name__ == "__main__":
     # Use dataset_csv_files for processing
     csv_files = dataset_csv_files
 
-    # Debugging: Print available CSV files
     print("\n=== DEBUG: Available CSV Files ===")
     for csv_file in csv_files:
         print(f"- {os.path.basename(csv_file)}")

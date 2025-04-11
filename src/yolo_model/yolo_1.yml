@@ -1,4 +1,4 @@
-# Baseline model training
+# Baseline model
 path: src/yolo_model/data
 train: images/train
 val: images/val

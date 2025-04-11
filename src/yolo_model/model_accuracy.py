@@ -4,7 +4,6 @@ import glob
 import warnings
 import re
 
-# Suppress urllib3 SSL warnings that don't affect functionality
 warnings.filterwarnings("ignore", category=UserWarning, module="urllib3")
 
 from ultralytics import YOLO
@@ -35,7 +34,7 @@ def load_ground_truth(csv_path):
             print(f"CSV headers: {headers}")
             
             for i, row in enumerate(reader):
-                if i < 5:  # Print first 5 rows for debugging
+                if i < 5:
                     print(f"Row {i+1}: {row}")
                 
                 if 'image_name' not in row or not row['image_name'] or not any(row.values()):
@@ -64,17 +63,16 @@ def load_ground_truth(csv_path):
                 total_count = rbc + wbc + ambiguous
                 
                 # Store multiple variations of the filename to make matching easier
-                cell_counts[image_name] = total_count  # Original: "Cell_0001.jpg"
-                cell_counts[image_name.lower()] = total_count  # Lowercase: "cell_0001.jpg"
+                cell_counts[image_name] = total_count
+                cell_counts[image_name.lower()] = total_count
                 
                 # Also store without extension
                 name_without_ext = os.path.splitext(image_name)[0]
-                cell_counts[name_without_ext] = total_count  # Without extension: "Cell_0001"
-                cell_counts[name_without_ext.lower()] = total_count  # Lowercase without extension: "cell_0001"
+                cell_counts[name_without_ext] = total_count
+                cell_counts[name_without_ext.lower()] = total_count
             
             print(f"Loaded {len(cell_counts) // 4} image entries from ground truth")
             
-            # Print some sample entries
             sample_keys = [k for k in cell_counts.keys() if not k.lower().startswith("cell_")][:5]
             for key in sample_keys:
                 print(f"Sample GT: {key} = {cell_counts[key]} cells")
@@ -146,16 +144,15 @@ def validate_cell_counting(model_path, val_img_dir, ground_truth_csv, cell_type,
         gt_count = None
         matched_name = None
         
-        # Try different variations to match with ground truth
         name_variations = [
-            base_name,                      # Original unprefixed name: Basophil_0001.jpg
-            base_name_no_ext,               # Without extension: Basophil_0001
-            base_name.lower(),              # Lowercase: basophil_0001.jpg
-            base_name_no_ext.lower(),       # Lowercase without extension: basophil_0001
-            img_name,                       # Full name with prefix
-            img_name_no_ext,                # Full name without extension
-            img_name.lower(),               # Full name lowercase
-            img_name_no_ext.lower()         # Full name lowercase without extension
+            base_name,                      
+            base_name_no_ext,              
+            base_name.lower(),     
+            base_name_no_ext.lower(),  
+            img_name,        
+            img_name_no_ext,            
+            img_name.lower(),    
+            img_name_no_ext.lower()  
         ]
         
         for name_var in name_variations:
@@ -201,15 +198,13 @@ def validate_cell_counting(model_path, val_img_dir, ground_truth_csv, cell_type,
             result_img = image.copy()
             for i, box in enumerate(boxes):
                 x1, y1, x2, y2 = map(int, box)
-                color = (0, 255, 0)  # Green for detections
+                color = (0, 255, 0)
                 thickness = 2
                 cv2.rectangle(result_img, (x1, y1), (x2, y2), color, thickness)
                 
-                # Add confidence score
                 cv2.putText(result_img, f'{scores[i]:.2f}', (x1, y1-10), 
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
             
-            # Add text with counts
             cv2.putText(result_img, 
                        f'GT: {gt_count}, Pred: {pred_count}, Error: {error} ({error_percent:.1f}%)', 
                        (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
@@ -226,7 +221,6 @@ def validate_cell_counting(model_path, val_img_dir, ground_truth_csv, cell_type,
             output_path = os.path.join(debug_dir, f"{img_name_no_ext}_annotated.jpg")
             cv2.imwrite(output_path, result_img)
         
-        # Store results
         results.append({
             'image': img_name,
             'matched_gt_name': matched_name,
@@ -258,8 +252,6 @@ def validate_cell_counting(model_path, val_img_dir, ground_truth_csv, cell_type,
         print(f"Total predicted cells: {total_predicted_cells}")
         print(f"Mean absolute error: {mean_absolute_error:.2f} cells per image")
         print(f"Overall counting accuracy: {accuracy_percent:.2f}%")
-        
-        # Try different confidence thresholds
         print("\nResults with different confidence thresholds:")
         for conf in confidence_levels:
             pred_cells_at_conf = sum(r[f'conf_{conf}'] for r in results)

@@ -1,4 +1,4 @@
-# Fine-Tuning
+# Extended model
 path: src/yolo_model/data_2
 train: images
 val: images

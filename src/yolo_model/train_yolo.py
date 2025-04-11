@@ -2,7 +2,7 @@ import os
 import subprocess
 
 def train_yolo_model():
-    """Train a YOLOv8 model on the prepared dataset."""
+    """Train a YOLOv8 Baseline model on dataset (data)"""
     
     yaml_path = f'./yolo_1.yml'
     output_dir = f'./models/runs'
