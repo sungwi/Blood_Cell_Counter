@@ -13,7 +13,7 @@ Comparative study of deep learning architectures (YOLO and U-Net) to count blood
 
 ## Video/demo/GIF
 
-| [Video](https://www.google.com) |
+| [Video](https://drive.google.com/file/d/1tly4wWvH4dPIy0XyTfkWd0neJutfn-Za/view?usp=drive_link) |
 |-----------|
 
 
@@ -21,53 +21,62 @@ Record a short video (1:40 - 2 minutes maximum) or gif or a simple screen record
 
 
 ## Table of Contents
-1. [Demo](#demo)
+1. [Installation](#installation)
 
-2. [Installation](#installation)
+2. [Demo](#demo)
 
 3. [Reproducing this project](#repro)
 
 4. [Guidance](#guide)
 
 
-<a name="demo"></a>
-## 1. Example demo
-
-A minimal example to showcase your work
-
-```python
-from amazing import amazingexample
-imgs = amazingexample.demo()
-for img in imgs:
-    view(img)
-```
-
 ### What to find where
-
-Explain briefly what files are found where
 
 ```bash
 repository
-├── src                          ## source code of the package itself
-├── scripts                      ## scripts, if needed
-├── docs                         ## If needed, documentation   
+├── src                          ## source code of the package itself 
 ├── README.md                    ## You are here
 ├── requirements.yml             ## If you use conda
 ```
 
+```bash
+src                     
+├── data_processing              ## Datasets / processing 
+├── streamlit                    ## Streamlit user interface scripts
+    ├── models                   ## Model files
+├── yolo_model                   ## Scripts for training yolo model
+├── unet_model                   ## Scripts for training unet model 
+```
+
+## 1. Installation
+
+### Requirments:
+```python
+Python 3.7 or later
+Streamlit
+```
+
+### Installation:
+```python
+pip install streamlit
+```
+
 <a name="installation"></a>
 
-## 2. Installation
-
-Provide sufficient instructions to reproduce and install your project. 
-Provide _exact_ versions, test on CSIL or reference workstations.
+## 2. Demo
+Instructions to install this project and launch the streamlit user interface. 
 
 ```bash
 git clone $THISREPO
 cd $THISREPO
-conda env create -f requirements.yml
-conda activate amazing
+
+cd src
+cd streamlit
+
+streamlit run cell_count_streamlit.py
 ```
+
+This will launch this projects streamlit user interface where you can select the different models on the drop down locted on the left hand side and upload medical images to count the cells.
 
 <a name="repro"></a>
 ## 3. Reproduction
