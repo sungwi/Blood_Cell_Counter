@@ -19,3 +19,6 @@ tqdm>=4.62.3
 # Utilities
 argparse>=1.4.0
 pathlib>=1.0.1
+
+# YOLOv8
+ultralytics>=8.0.0
