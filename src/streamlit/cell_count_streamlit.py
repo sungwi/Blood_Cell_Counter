@@ -53,7 +53,7 @@ def yolo_extended():
         st.text(f"Total Cells Detected: {cell_count}")
 
 def unet_base():
-    st.subheader("UNET baseline model: Trained on 100 emdical images")
+    st.subheader("UNET baseline model: Trained on 100 medical images")
     uploaded_file = st.file_uploader("Upload a blood cell image (JPEG or PNG)", type=["jpeg", "png", "jpg"])
     
     if uploaded_file is not None:
