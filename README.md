@@ -29,18 +29,20 @@ Comparative study of deep learning architectures (YOLO and U-Net) to count blood
 
 ```bash
 repository
-├── src                          ## source code of the package itself 
+├── src                          ## Source code of the package itself 
 ├── README.md                    ## You are here
-├── requirements.yml             ## If you use conda
+├── requirements.txt             ## Requirments for the project
 ```
 
 ```bash
 src                     
 ├── data_processing              ## Datasets / processing 
 ├── streamlit                    ## Streamlit user interface scripts
-    ├── models                   ## Model files
-├── yolo_model                   ## Scripts for training yolo model
-├── unet_model                   ## Scripts for training unet model 
+    ├── models                   ## Directory in which models are stored
+├── unet_model                   ## Scripts for training and testing UNET model 
+├── yolo_model                   ## Scripts for training and testing YOLO model
+    ├── annotations              ## Annotations for the YOLO model
+    ├── models                   ## Iterations for the YOLO model
 ```
 
 ## 1. Installation
