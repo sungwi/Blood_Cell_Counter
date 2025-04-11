@@ -148,6 +148,12 @@ Uses ```yolo_2.yml``` and outputs to ```src/yolo_model/models/runs_finetune/cell
 ### 3.2 Unet Reproduction
 
 ### Train the U-Net Model
+
+After cloning the repo: navigate to the Unet directory:
+```bash
+cd src/UNet_src
+```
+To train:
 ```bash
 python train_baseline_unet.py
 ```
