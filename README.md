@@ -97,6 +97,12 @@ This will launch this projects streamlit user interface where you can select the
 - **(A) Baseline Training** — Generate pseudo-annotations and train a baseline model.
 - **(B) Extended Training** — Re-train using additional annotated dataset (VOC format)
 
+#### Setup
+Navigate to the YOLO directory:
+```bash
+cd ../yolo_model
+```
+
 #### A. Train Baseline Model
 
 ##### Generate YOLO Annotations
