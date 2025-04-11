@@ -1,8 +1,6 @@
 # SFU CMPT 419 Project Template -- Group 24: Blood Cell Counter
-This repository is a template for your CMPT 419 course project.
-Replace the title with your project title, and **add a snappy acronym that people remember (mnemonic)**.
 
-Comparative study of deep learning architectures (YOLO and U-Net) to count blood cells in medical images. Our objective, to determine and attempt to increase model performance. Utilized two public Kaggle blood cell datasets to train the models, while manually labeling real medical images for ground truths.
+Comparative study of deep learning architectures (YOLO and U-Net) to count blood cells in medical images. Our objective is to determine and attempt to increase model performance. Utilized two public Kaggle blood cell datasets to train the models, while manually labeling real medical images for ground truths. We've strapped the models onto a simple streamlit user interface for testing.
 
 
 ## Important Links
@@ -17,9 +15,6 @@ Comparative study of deep learning architectures (YOLO and U-Net) to count blood
 |-----------|
 
 
-Record a short video (1:40 - 2 minutes maximum) or gif or a simple screen recording or even using PowerPoint with audio or with text, showcasing your work.
-
-
 ## Table of Contents
 1. [Installation](#installation)
 
@@ -27,7 +22,7 @@ Record a short video (1:40 - 2 minutes maximum) or gif or a simple screen record
 
 3. [Reproducing this project](#repro)
 
-4. [Guidance](#guide)
+4. [References](#references)
 
 
 ### What to find where
@@ -132,10 +127,8 @@ python compare_cell_counts.py --manual_dir path/to/dataset_2 --detection_dir cel
 ```
 Generates performance metrics and visualizations comparing automated and manual counts.
 
-<a name="guide"></a>
-
 
 <a name="references"></a>
-## 5. References
+## 4. References
 
 Add any references or citations for the resources, papers, or tools you used in your project here.
