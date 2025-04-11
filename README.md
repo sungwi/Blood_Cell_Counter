@@ -176,8 +176,11 @@ Optional arguments:
 python run_detection.py --model_path 
 ```
 Command line parameters for:
+
 --model_path: Path to the model file
+
 --dataset_path: Path to the image dataset
+
 --output_dir: Directory to save results
 
 ### C. Compare with Manual Counts
