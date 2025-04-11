@@ -193,4 +193,31 @@ Generates performance metrics and visualizations comparing automated and manual 
 <a name="references"></a>
 ## 4. References
 
-Add any references or citations for the resources, papers, or tools you used in your project here.
+### Papers:
+
+[1] Mohammad Mahmudul Alam, Edward Raff, and Tim Oates. Towards Generalization in Subitizing with Neuro-Symbolic Loss using Holographic Reduced Representations. 2023. doi: 10.48550/ARXIV.2312.15310. url: https://arxiv.org/abs/2312.15310.
+
+[2] Luca Ciampi et al. “Counting or Localizing? Evaluating Cell Counting and Detection in Microscopy Images:” in: Proceedings of the 17th International Joint Conference on Computer Vision, Imaging and Computer Graphics Theory and Applications. SCITEPRESS - Science and Technology Publications, 2022, pp. 887–897. isbn: 9789897585555. doi: 10.5220/0010923000003124. url: https://www.scitepress.org/DigitalLibrary/Link.aspx?doi=10.5220/0010923000003124.
+
+[3] Adriano D’Alessandro, Ali Mahdavi-Amiri, and Ghassan Hamarneh. Counting Objects in Images using DeepLearning: Methods and Current Challenges. June 2023. doi: 10.21203/rs.3.rs-2986682/v1. url: https://www.researchsquare.com/article/rs-2986682/v1.
+
+[4] Toyah Overton and Allan Tucker. “DO-U-Net for Segmentation and Counting”. en. In: Advances in Intelligent Data Analysis XVIII. Ed. by Michael R. Berthold, Ad Feelders, and Georg Krempl. Cham: Springer International Publishing, 2020, pp. 391–403. isbn: 9783030445843. doi: 10.1007/978-3-030-44584-3_31.
+
+[5] Zixuan Zheng et al. “Rethinking Cell Counting Methods: Decoupling Counting and Localization”. en. In: Medical Image Computing and Computer Assisted Intervention – MICCAI 2024. Ed. by Marius George Linguraru et al. Cham: Springer Nature Switzerland, 2024, pp. 418–426. isbn: 9783031720833.
+doi: 10.1007/978-3-031-72083-3 39.
+
+### Resources:
+
+[6] Paul Mooney. Blood Cell Images. en. 2018. url: https://www.kaggle.com/ datasets/paultimothymooney/blood-cells.
+
+[7] UncleSamulus et al. Blood Cells Image Dataset. en. 2023. url: https://www.kaggle.com/datasets/unclesamulus/lood-cells-image-dataset
+
+### Tools:
+
+[8] U-Net - https://smp.readthedocs.io/en/latest/models.html#
+
+[9] Yolov8n - https://docs.ultralytics.com/models/yolov8/
+
+[10] Streamlit - https://docs.streamlit.io/
+
+[11] Google Colab - https://colab.google
