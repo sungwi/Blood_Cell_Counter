@@ -6,7 +6,8 @@ Comparative study of deep learning architectures (YOLO and U-Net) to count blood
 ## Important Links
 
 | [Timesheet](https://1sfu-my.sharepoint.com/:x:/g/personal/hamarneh_sfu_ca/ESLM1jsUUh1Ar89Cm5tXbsgB6QWCOIXIvXXyj7QZ4exStQ?e=33fGUC) | [Slack channel](https://app.slack.com/client/T0866LNE29J/C085YA5CCUF) | [Project report](https://www.overleaf.com/project/676b843477fee1c1b96609a4) | [Dataset Download](https://drive.google.com/drive/folders/1xQ_ConHa24Ysw_tm_dQHyPwVtuZIXFmU?usp=sharing) |
-|-----------|---------------|-------------------------|
+|-----------|---------------|-------------------------|------------------------|
+
 
 
 ## Video/demo/GIF
