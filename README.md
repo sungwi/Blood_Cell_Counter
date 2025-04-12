@@ -22,9 +22,9 @@ Comparative study of deep learning architectures (YOLO and U-Net) to count blood
 
 3. [Reproducing this project](#repro)
 
-- 3.1. [Yolo Model](#yolo)
+    3.1. [Yolo Model](#yolo)
 
-- 3.2. [U-Net Model](#unet)
+    3.2. [U-Net Model](#unet)
 
 4. [References](#references)
 
