@@ -281,7 +281,7 @@ doi: 10.1007/978-3-031-72083-3 39.
 
 ### Resources:
 
-[6] Paul Mooney. Blood Cell Images. en. 2018. url: https://www.kaggle.com/ datasets/paultimothymooney/blood-cells.
+[6] Paul Mooney. Blood Cell Images. en. 2018. url: https://www.kaggle.com/datasets/paultimothymooney/blood-cells.
 
 [7] UncleSamulus et al. Blood Cells Image Dataset. en. 2023. url: https://www.kaggle.com/datasets/unclesamulus/lood-cells-image-dataset
 
@@ -294,3 +294,6 @@ doi: 10.1007/978-3-031-72083-3 39.
 [10] Streamlit - https://docs.streamlit.io/
 
 [11] Google Colab - https://colab.google
+
+
+
