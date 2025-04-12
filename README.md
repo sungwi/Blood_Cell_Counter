@@ -149,7 +149,7 @@ Uses ```yolo_2.yml``` and outputs to ```src/yolo_model/models/runs_finetune/cell
 
 ### 3.2 U-Net Reproduction
 
-**After cloning the repo: navigate to the U-Net directory:**
+After cloning the repo: navigate to the U-Net directory:
 ```bash
 cd src/UNet_src
 ```
@@ -159,7 +159,7 @@ Note: Trained models are saved as `.h5` files
 
 ### 1. Train Baseline Model
 
-**To train the baseline model:**
+To train the baseline model:
 ```bash
 python train_baseline_unet.py
 ```
@@ -209,7 +209,7 @@ To run the extended model training:
  
 
 #### B. Run Cell Detection
-**Cell detection bash command:**
+Cell detection bash command:
 ```bash
 python run_detection.py 
 ```
@@ -224,19 +224,19 @@ Command line parameters for:
 --output_dir: Directory to save results (default: cell_detection_results)
 
 ### 1. Cell Detection with Baseline U-Net Model
-**To run cell detection with baseline U-Net model:**
+To run cell detection with baseline U-Net model:
 ```bash
 python run_detection.py --output_dir baseline_detection_results
 ```
 
 ### 2. Cell Detection with Extended
-**To run cell detection with extended U-Net model:**
+To run cell detection with extended U-Net model:
 ```bash
 python run_detection.py --model_path ../src/streamlit/models/unet/unet-extended.h5 --output_dir extended_detection_results
 ```
 
 ### C. Compare Detection Results with Manual Counts
-**Compare detection results bash command:**
+Compare detection results bash command:
 ```bash
 python compare_cell_counts.py 
 ```
@@ -252,13 +252,13 @@ Optional Arguments:
 --output_dir: has a default but can be set to a new directory (default: "comparison_results" directory)
 
 ### 1. Comparison with Baseline Model Results 
-**To compare baseline detection results with manual counts:**
+To compare baseline detection results with manual counts:
 ```bash
 python compare_cell_counts.py --manual_dir dataset_2 --detection_dir baseline_detection_results --output_dir baseline_comparison_results
 ```
 
 ### 2. Comparison with Extended Model Results
-**To compare extended detection results with manual counts:**
+To compare extended detection results with manual counts:
 ```bash
 python compare_cell_counts.py --manual_dir dataset_2 --detection_dir extended_detection_results --output_dir extended_comparison_results
 ```
