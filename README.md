@@ -22,7 +22,11 @@ Comparative study of deep learning architectures (YOLO and U-Net) to count blood
 
 3. [Reproducing this project](#repro)
 
-4. [References](#references)
+    3.1. [Yolo Model](#yolo)
+   
+    3.2. [U-Net Model](#unet)
+
+5. [References](#references)
 
 
 ### What to find where
@@ -44,7 +48,7 @@ src
     ├── annotations              ## Annotations for the YOLO model
     ├── models                   ## Iterations for the YOLO model
 ```
-
+<a name="installation"></a>
 ## 1. Installation
 
 ### Create and Activate Virtual Environment
@@ -70,7 +74,7 @@ pip install -r requirements.txt
 ```
 
 
-<a name="installation"></a>
+<a name="demo"></a>
 
 ## 2. Demo
 Instructions to install this project and launch the streamlit user interface. 
@@ -90,6 +94,8 @@ This will launch this projects streamlit user interface where you can select the
 <a name="repro"></a>
 
 ## 3 Reproduction
+
+<a name="yolo"></a>
 
 ### 3.1 YOLO Reproduction
 
@@ -145,6 +151,7 @@ python train_yolo_2.py
 Fine-tunes the previously trained model (best.pt) using extended annotations.
 Uses ```yolo_2.yml``` and outputs to ```src/yolo_model/models/runs_finetune/cell_detection_finetuned/```.
 
+<a name="unet"></a>
 
 ### 3.2 U-Net Reproduction
 
@@ -280,7 +287,7 @@ doi: 10.1007/978-3-031-72083-3 39.
 
 ### Resources:
 
-[6] Paul Mooney. Blood Cell Images. en. 2018. url: https://www.kaggle.com/ datasets/paultimothymooney/blood-cells.
+[6] Paul Mooney. Blood Cell Images. en. 2018. url: https://www.kaggle.com/datasets/paultimothymooney/blood-cells.
 
 [7] UncleSamulus et al. Blood Cells Image Dataset. en. 2023. url: https://www.kaggle.com/datasets/unclesamulus/lood-cells-image-dataset
 
