@@ -202,7 +202,7 @@ To run the extended model training:
    - In Colab, go to the menu bar:  
      `Runtime` → `Change runtime type` → set **Hardware accelerator** to **GPU**
 
-3. Zip the processed directory under src/data_processing/dataset_2/
+3. Zip the "processed" directory under ../src/data_processing/dataset_2/processed
 
 3. Upload zipped processed dataset:
    - You can upload your dataset (`processed.zip`) directly to the Colab session or mount your Google Drive:
