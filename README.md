@@ -110,7 +110,7 @@ cd src/yolo_model
 
 ##### Generate YOLO Annotations
 ```bash
-python generate_annotations.py
+python generate_annotations.py 
 ```
 Generates YOLO-format .txt annotations in ```src/yolo_model/annotation/{cell_type}/```.
 
@@ -166,13 +166,12 @@ Note: Trained models are saved as `.h5` files
 
 To train the baseline model:
 ```bash
-python train_baseline_unet.py
+python train_baseline_unet.py --dataset_path ../data_processing/datasets/dataset_2/processed
 ```
-Default: The original dataset used to train baseline: "dataset_2/processed/"
 
-Optional arguments:
+Arguments:
 
---dataset_path: Path to the dataset
+--dataset_path: Path to the dataset (default: "dataset_2/processed/")
 
 --output_dir: Directory to save model and results (default: current directory)
 
@@ -198,7 +197,7 @@ To run the extended model training:
    - In Colab, go to the menu bar:  
      `Runtime` → `Change runtime type` → set **Hardware accelerator** to **GPU**
 
-3. Zip the processed directory under UNet_src/dataset_2/
+3. Zip the processed directory under src/data_processing/dataset_2/
 
 3. Upload zipped processed dataset:
    - You can upload your dataset (`processed.zip`) directly to the Colab session or mount your Google Drive:
@@ -231,13 +230,13 @@ Command line parameters for:
 ### B.1. Cell Detection with Baseline U-Net Model
 To run cell detection with baseline U-Net model:
 ```bash
-python run_detection.py --output_dir baseline_detection_results
+python run_detection.py --dataset_path ../data_processing/datasets/dataset_2/processed --output_dir baseline_detection_results
 ```
 
 ### B.2. Cell Detection with Extended
 To run cell detection with extended U-Net model:
 ```bash
-python run_detection.py --model_path ../streamlit/models/unet/unet-extended.h5 --output_dir extended_detection_results
+python run_detection.py --dataset_path ../data_processing/datasets/dataset_2/processed --model_path ../streamlit/models/unet/unet-extended.h5 --output_dir extended_detection_results
 
 ```
 
@@ -260,13 +259,13 @@ Optional Arguments:
 ### C.1. Comparison with Baseline Model Results 
 To compare baseline detection results with manual counts:
 ```bash
-python compare_cell_counts.py --manual_dir dataset_2 --detection_dir baseline_detection_results --output_dir baseline_comparison_results
+python compare_cell_counts.py --manual_dir ../data_processing/datasets/dataset_2 --detection_dir baseline_detection_results --output_dir baseline_comparison_results
 ```
 
 ### C.2. Comparison with Extended Model Results
 To compare extended detection results with manual counts:
 ```bash
-python compare_cell_counts.py --manual_dir dataset_2 --detection_dir extended_detection_results --output_dir extended_comparison_results
+python compare_cell_counts.py --manual_dir ../data_processing/datasets/dataset_2/ --detection_dir extended_detection_results --output_dir extended_comparison_results
 ```
 
 <a name="references"></a>
