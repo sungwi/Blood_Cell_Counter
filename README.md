@@ -149,7 +149,7 @@ Uses ```yolo_2.yml``` and outputs to ```src/yolo_model/models/runs_finetune/cell
 
 ### 3.2 U-Net Reproduction
 
-After cloning the repo: navigate to the U-Net directory:
+**After cloning the repo: navigate to the U-Net directory:**
 ```bash
 cd src/UNet_src
 ```
@@ -157,9 +157,9 @@ cd src/UNet_src
 
 Note: Trained models are saved as `.h5` files
 
-##### 1. Train Baseline Model
+### 1. Train Baseline Model
 
-To train the baseline model:
+**To train the baseline model:**
 ```bash
 python train_baseline_unet.py
 ```
@@ -179,10 +179,37 @@ Optional arguments:
 
 --model_name: Name of the output model file (default: "baseline_unet.h5")
 
-##### 2. Train Extended Model
+### 2. Train Extended Model
+
+The extended U-Net model is trained using the `Extended_UNet.ipynb` Jupyter notebook. This notebook is optimized for execution on Google Colab.
+
+To run the extended model training:
+
+1. Open the notebook in Google Colab:
+   - You can do this by uploading the `Extended_UNet.ipynb` notebook to your Google Drive.
+   - Right-click the file → **Open with** → **Google Colab**.
+
+2. Make sure GPU acceleration is enabled:
+   - In Colab, go to the menu bar:  
+     `Runtime` → `Change runtime type` → set **Hardware accelerator** to **GPU**
+
+3. Zip the processed directory under UNet_src/dataset_2/
+
+3. Upload zipped processed dataset:
+   - You can upload your dataset (`processed.zip`) directly to the Colab session or mount your Google Drive:
+   ```python
+   from google.colab import drive
+   drive.mount('/content/drive')
+
+4. Adjust dataset paths in the notebook code (if needed) to match the uploaded or mounted directory. 
+
+5. Run all cells to train the extended U-Net model.
+
+6. After training, save the model (e.g., unet-extended.h5) locally and move it under /UNet_src 
+ 
 
 #### B. Run Cell Detection
-Cell detection bash command:
+**Cell detection bash command:**
 ```bash
 python run_detection.py 
 ```
@@ -196,20 +223,20 @@ Command line parameters for:
 
 --output_dir: Directory to save results (default: cell_detection_results)
 
-##### 1. Cell Detection with Baseline U-Net Model
-To run cell detection with baseline U-Net model:
+### 1. Cell Detection with Baseline U-Net Model
+**To run cell detection with baseline U-Net model:**
 ```bash
 python run_detection.py --output_dir baseline_detection_results
 ```
 
-##### 2. Cell Detection with Extended
-To run cell detection with extended U-Net model:
+### 2. Cell Detection with Extended
+**To run cell detection with extended U-Net model:**
 ```bash
 python run_detection.py --model_path ../src/streamlit/models/unet/unet-extended.h5 --output_dir extended_detection_results
 ```
 
 ### C. Compare Detection Results with Manual Counts
-Compare detection results bash command:
+**Compare detection results bash command:**
 ```bash
 python compare_cell_counts.py 
 ```
@@ -224,16 +251,17 @@ Optional Arguments:
 
 --output_dir: has a default but can be set to a new directory (default: "comparison_results" directory)
 
-#### 1. Comparison with Baseline Model Results 
-To compare baseline detection results with manual counts:
+### 1. Comparison with Baseline Model Results 
+**To compare baseline detection results with manual counts:**
 ```bash
 python compare_cell_counts.py --manual_dir dataset_2 --detection_dir baseline_detection_results --output_dir baseline_comparison_results
 ```
 
-#### 2. Comparison with Extended Model Results
-To compare extended detection results with manual counts:
+### 2. Comparison with Extended Model Results
+**To compare extended detection results with manual counts:**
 ```bash
 python compare_cell_counts.py --manual_dir dataset_2 --detection_dir extended_detection_results --output_dir extended_comparison_results
+```
 
 <a name="references"></a>
 ## 4. References
