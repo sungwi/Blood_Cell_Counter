@@ -47,16 +47,7 @@ src
 
 ## 1. Installation
 
-### Requirments:
-All required packages are listed in `requirements.txt`. Install them with:
-
-
-### Installation:
-```bash
-pip install -r requirements.txt
-```
-
-Create and Activate Virtual Environment
+### Create and Activate Virtual Environment
 
 Windows:
 ```bash
@@ -68,6 +59,14 @@ Linux/macOS:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
+```
+### Requirments:
+All required packages are listed in `requirements.txt`. Install them with:
+
+
+ Installation:
+```bash
+pip install -r requirements.txt
 ```
 
 
@@ -153,11 +152,11 @@ After cloning the repo: navigate to the U-Net directory:
 ```bash
 cd src/UNet_src
 ```
-#### A. Train U-Net Models
+### A. Train U-Net Models
 
 Note: Trained models are saved as `.h5` files
 
-### 1. Train Baseline Model
+### A.1. Train Baseline Model
 
 To train the baseline model:
 ```bash
@@ -179,7 +178,7 @@ Optional arguments:
 
 --model_name: Name of the output model file (default: "baseline_unet.h5")
 
-### 2. Train Extended Model
+### A.2. Train Extended Model
 
 The extended U-Net model is trained using the `Extended_UNet.ipynb` Jupyter notebook. This notebook is optimized for execution on Google Colab.
 
@@ -208,7 +207,7 @@ To run the extended model training:
 6. After training, save the model (e.g., unet-extended.h5) locally and move it under /UNet_src 
  
 
-#### B. Run Cell Detection
+### B. Run Cell Detection
 Cell detection bash command:
 ```bash
 python run_detection.py 
@@ -223,16 +222,17 @@ Command line parameters for:
 
 --output_dir: Directory to save results (default: cell_detection_results)
 
-### 1. Cell Detection with Baseline U-Net Model
+### B.1. Cell Detection with Baseline U-Net Model
 To run cell detection with baseline U-Net model:
 ```bash
 python run_detection.py --output_dir baseline_detection_results
 ```
 
-### 2. Cell Detection with Extended
+### B.2. Cell Detection with Extended
 To run cell detection with extended U-Net model:
 ```bash
-python run_detection.py --model_path ../src/streamlit/models/unet/unet-extended.h5 --output_dir extended_detection_results
+python run_detection.py --model_path ../streamlit/models/unet/unet-extended.h5 --output_dir extended_detection_results
+
 ```
 
 ### C. Compare Detection Results with Manual Counts
@@ -251,13 +251,13 @@ Optional Arguments:
 
 --output_dir: has a default but can be set to a new directory (default: "comparison_results" directory)
 
-### 1. Comparison with Baseline Model Results 
+### C.1. Comparison with Baseline Model Results 
 To compare baseline detection results with manual counts:
 ```bash
 python compare_cell_counts.py --manual_dir dataset_2 --detection_dir baseline_detection_results --output_dir baseline_comparison_results
 ```
 
-### 2. Comparison with Extended Model Results
+### C.2. Comparison with Extended Model Results
 To compare extended detection results with manual counts:
 ```bash
 python compare_cell_counts.py --manual_dir dataset_2 --detection_dir extended_detection_results --output_dir extended_comparison_results

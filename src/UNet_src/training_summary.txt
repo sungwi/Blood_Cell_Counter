@@ -10,6 +10,6 @@ Epochs: 50
 Batch size: 8
 
 Test Results:
-  Loss: 0.2887
-  Accuracy: 0.8520
-  IoU: 0.1228
+ Loss: 0.2938
+ Accuracy: 0.8554
+ IoU: 0.1228
