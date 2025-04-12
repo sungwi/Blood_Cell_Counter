@@ -52,6 +52,9 @@ src
 <a name="installation"></a>
 ## 1. Installation
 
+### Download Dataset to Respected Path
+Please download the datasets under "important links" and upload them into the "../src/data_processing/datasets" path prior to running any scripts.
+
 ### Create and Activate Virtual Environment
 
 Windows:
