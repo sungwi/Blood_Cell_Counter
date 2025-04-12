@@ -95,7 +95,7 @@ def count_cells(predictions, threshold=0.5, min_size=30):
     
     return cell_counts, region_props
 
-def visualize_results(images, image_info, predictions, cell_counts, region_props, model_path="unet_blood_cells.h5", output_dir="cell_detection_results"):
+def visualize_results(images, image_info, predictions, cell_counts, region_props, model_path="baseline_unet.h5", output_dir="cell_detection_results"):
     """Create visualizations of the cell detection results."""
     # Create output directory if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
@@ -188,7 +188,7 @@ def visualize_results(images, image_info, predictions, cell_counts, region_props
 def main():
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Run cell detection on images.')
-    parser.add_argument('--model_path', type=str, default="unet_blood_cells.h5",
+    parser.add_argument('--model_path', type=str, default="baseline_unet.h5",
                         help='Path to the trained model file')
     parser.add_argument('--dataset_path', type=str, default="dataset_2/processed/",
                         help='Path to the processed dataset')

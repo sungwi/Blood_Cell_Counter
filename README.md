@@ -129,6 +129,8 @@ Results saved to ```src/yolo_model/models/runs/cell_detection/```.
 
 #### B. Train Extended Model
 
+
+
 ##### Convert VOC to YOLO Format (for Extended Training)
 ```bash
 python convert_xml_to_txt.py
@@ -145,21 +147,27 @@ Fine-tunes the previously trained model (best.pt) using extended annotations.
 Uses ```yolo_2.yml``` and outputs to ```src/yolo_model/models/runs_finetune/cell_detection_finetuned/```.
 
 
-### 3.2 Unet Reproduction
+### 3.2 U-Net Reproduction
 
-### Train the U-Net Model
-
-After cloning the repo: navigate to the Unet directory:
+After cloning the repo: navigate to the U-Net directory:
 ```bash
 cd src/UNet_src
 ```
-To train:
+#### A. Train U-Net Models
+
+Note: Trained models are saved as `.h5` files
+
+##### 1. Train Baseline Model
+
+To train the baseline model:
 ```bash
 python train_baseline_unet.py
 ```
-Make sure to set: --dataset_path: for the path to the dataset_2/processed dataset file to recreate baseline unet model (default: "dataset_2/processed/")
+Default: The original dataset used to train baseline: "dataset_2/processed/"
 
 Optional arguments:
+
+--dataset_path: Path to the dataset
 
 --output_dir: Directory to save model and results (default: current directory)
 
@@ -171,24 +179,61 @@ Optional arguments:
 
 --model_name: Name of the output model file (default: "baseline_unet.h5")
 
-### B. Run Cell Detection
+##### 2. Train Extended Model
+
+#### B. Run Cell Detection
+Cell detection bash command:
 ```bash
-python run_detection.py --model_path 
+python run_detection.py 
 ```
+ --output_dir cell_detection_results
+
 Command line parameters for:
 
---model_path: Path to the model file
+--model_path: Path to the model file (default: baseline_unet.h5)
 
---dataset_path: Path to the image dataset
+--dataset_path: Path to the image dataset (default: dataset/processed/)
 
---output_dir: Directory to save results
+--output_dir: Directory to save results (default: cell_detection_results)
 
-### C. Compare with Manual Counts
+##### 1. Cell Detection with Baseline U-Net Model
+To run cell detection with baseline U-Net model:
 ```bash
-python compare_cell_counts.py --manual_dir path/to/dataset_2 --detection_dir cell_detection_results --output_dir comparison_output
+python run_detection.py --output_dir baseline_detection_results
 ```
-Generates performance metrics and visualizations comparing automated and manual counts.
 
+##### 2. Cell Detection with Extended
+To run cell detection with extended U-Net model:
+```bash
+python run_detection.py --model_path ../src/streamlit/models/unet/unet-extended.h5 --output_dir extended_detection_results
+```
+
+### C. Compare Detection Results with Manual Counts
+Compare detection results bash command:
+```bash
+python compare_cell_counts.py 
+```
+
+Required Arguments:
+
+--manual_dir: directory containing all the manual counted .csv files
+
+--detection_dir: directory containing the detection results outputs
+
+Optional Arguments: 
+
+--output_dir: has a default but can be set to a new directory (default: "comparison_results" directory)
+
+#### 1. Comparison with Baseline Model Results 
+To compare baseline detection results with manual counts:
+```bash
+python compare_cell_counts.py --manual_dir dataset_2 --detection_dir baseline_detection_results --output_dir baseline_comparison_results
+```
+
+#### 2. Comparison with Extended Model Results
+To compare extended detection results with manual counts:
+```bash
+python compare_cell_counts.py --manual_dir dataset_2 --detection_dir extended_detection_results --output_dir extended_comparison_results
 
 <a name="references"></a>
 ## 4. References
