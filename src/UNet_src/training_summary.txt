@@ -1,7 +1,7 @@
 U-Net Training Summary
 =====================
 
-Dataset path: dataset_2\processed
+Dataset path: dataset_2/processed/
 Model saved to: .\baseline_unet.h5
 Training images: 70
 Validation images: 15
@@ -10,6 +10,6 @@ Epochs: 50
 Batch size: 8
 
 Test Results:
-  Loss: 0.2938
-  Accuracy: 0.8554
+  Loss: 0.2887
+  Accuracy: 0.8520
   IoU: 0.1228
