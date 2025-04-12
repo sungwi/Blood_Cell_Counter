@@ -22,6 +22,10 @@ Comparative study of deep learning architectures (YOLO and U-Net) to count blood
 
 3. [Reproducing this project](#repro)
 
+3.1 [Yolo Model](#yolo)
+
+3.2 [U-Net Model](#unet)
+
 4. [References](#references)
 
 
@@ -44,9 +48,8 @@ src
     ├── annotations              ## Annotations for the YOLO model
     ├── models                   ## Iterations for the YOLO model
 ```
-
-## 1. Installation
 <a name="installation"></a>
+## 1. Installation
 
 ### Create and Activate Virtual Environment
 
@@ -89,6 +92,8 @@ This will launch this projects streamlit user interface where you can select the
 <a name="repro"></a>
 
 ## 3 Reproduction
+
+<a name="yolo"></a>
 
 ### 3.1 YOLO Reproduction
 
@@ -144,6 +149,8 @@ python train_yolo_2.py
 Fine-tunes the previously trained model (best.pt) using extended annotations.
 Uses ```yolo_2.yml``` and outputs to ```src/yolo_model/models/runs_finetune/cell_detection_finetuned/```.
 
+
+<a name="unet"></a>
 
 ### 3.2 U-Net Reproduction
 
