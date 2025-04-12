@@ -46,6 +46,7 @@ src
 ```
 
 ## 1. Installation
+<a name="installation"></a>
 
 ### Create and Activate Virtual Environment
 
@@ -69,9 +70,7 @@ All required packages are listed in `requirements.txt`. Install them with:
 pip install -r requirements.txt
 ```
 
-
-<a name="installation"></a>
-
+<a name="demo"></a>
 ## 2. Demo
 Instructions to install this project and launch the streamlit user interface. 
 
