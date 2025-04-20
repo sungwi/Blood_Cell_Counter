@@ -9,7 +9,7 @@ seaborn>=0.11.2
 streamlit==1.43.1
 
 # Image processing
-#opencv-python>=4.5.4
+opencv-python==0.0.0
 opencv-python-headless>=4.5.4
 Pillow>=8.4.0
 
