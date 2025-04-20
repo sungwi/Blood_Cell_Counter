@@ -7,7 +7,7 @@ from ultralytics import YOLO
 import os
 model_path = os.path.join(os.path.dirname(__file__), "models/yolo/yolo-baseline.pt")
 
-yolo_baseline = YOLO("models/yolo/yolo-baseline.pt")
+yolo_baseline = YOLO(model_path)
 yolo_extended = YOLO("models/yolo/yolo-extended.pt")
 unet_baseline = load_model("models/unet/unet-baseline.h5")
 unet_extended = load_model("models/unet/unet-extended.h5")
