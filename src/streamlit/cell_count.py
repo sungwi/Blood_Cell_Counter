@@ -5,12 +5,15 @@ from keras.models import load_model
 from ultralytics import YOLO
 
 import os
-model_path = os.path.join(os.path.dirname(__file__), "models/yolo/yolo-baseline.pt")
+yolo_base = os.path.join(os.path.dirname(__file__), "models/yolo/yolo-baseline.pt")
+yolo_ex = os.path.join(os.path.dirname(__file__), "models/yolo/yolo-extended.pt")
+unet_base = os.path.join(os.path.dirname(__file__), "models/unet/unet-baseline.h5")
+unet_ex = os.path.join(os.path.dirname(__file__), "models/unet/unet-extended.h5")
 
-yolo_baseline = YOLO(model_path)
-yolo_extended = YOLO("models/yolo/yolo-extended.pt")
-unet_baseline = load_model("models/unet/unet-baseline.h5")
-unet_extended = load_model("models/unet/unet-extended.h5")
+yolo_baseline = YOLO(yolo_base)
+yolo_extended = YOLO(yolo_ex)
+unet_baseline = load_model(unet_base)
+unet_extended = load_model(unet_ex)
 
 def detect_cells_yolo_baseline(image):
     if image.mode != "RGB":
