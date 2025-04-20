@@ -4,6 +4,9 @@ import cv2
 from keras.models import load_model
 from ultralytics import YOLO
 
+import os
+model_path = os.path.join(os.path.dirname(__file__), "models/yolo/yolo-baseline.pt")
+
 yolo_baseline = YOLO("models/yolo/yolo-baseline.pt")
 yolo_extended = YOLO("models/yolo/yolo-extended.pt")
 unet_baseline = load_model("models/unet/unet-baseline.h5")
