@@ -6,7 +6,7 @@ from cell_count import *
 def main():
     st.title("Blood Cell Counter")
 
-    menu = ["YOLOv8n Base", "YOLOv8n Extended", "U-NET Base", "U-NET Extended"]
+    menu = ["YOLOv8n Base", "YOLOv8n Extended"]
     
     choice = st.sidebar.selectbox("Choose an option", menu)
     
