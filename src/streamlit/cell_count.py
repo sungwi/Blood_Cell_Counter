@@ -1,19 +1,19 @@
 import numpy as np
 import cv2
 
-from keras.models import load_model
+# from keras.models import load_model
 from ultralytics import YOLO
 
 import os
 yolo_base = os.path.join(os.path.dirname(__file__), "models/yolo/yolo-baseline.pt")
 yolo_ex = os.path.join(os.path.dirname(__file__), "models/yolo/yolo-extended.pt")
-unet_base = os.path.join(os.path.dirname(__file__), "models/unet/unet-baseline.h5")
-unet_ex = os.path.join(os.path.dirname(__file__), "models/unet/unet-extended.h5")
+# unet_base = os.path.join(os.path.dirname(__file__), "models/unet/unet-baseline.h5")
+# unet_ex = os.path.join(os.path.dirname(__file__), "models/unet/unet-extended.h5")
 
 yolo_baseline = YOLO(yolo_base)
 yolo_extended = YOLO(yolo_ex)
-unet_baseline = load_model(unet_base)
-unet_extended = load_model(unet_ex)
+# unet_baseline = load_model(unet_base)
+# unet_extended = load_model(unet_ex)
 
 def detect_cells_yolo_baseline(image):
     if image.mode != "RGB":
@@ -49,52 +49,52 @@ def detect_cells_yolo_extended(image):
 
     return img_np, cell_count
 
-def detect_cells_unet_baseline(image):
-    if not isinstance(image, np.ndarray):
-        if image.mode != "RGB":
-            image = image.convert("RGB")
-        image = np.array(image)
+# def detect_cells_unet_baseline(image):
+#     if not isinstance(image, np.ndarray):
+#         if image.mode != "RGB":
+#             image = image.convert("RGB")
+#         image = np.array(image)
 
-    image_resized = cv2.resize(image, (256, 256))
-    image_normalized = image_resized.astype(np.float32) / 255.0
-    image_batch = np.expand_dims(image_normalized, axis=0)
+#     image_resized = cv2.resize(image, (256, 256))
+#     image_normalized = image_resized.astype(np.float32) / 255.0
+#     image_batch = np.expand_dims(image_normalized, axis=0)
 
-    output = unet_baseline.predict(image_batch)[0]
+#     output = unet_baseline.predict(image_batch)[0]
 
-    if output.ndim == 3:
-        output = output[:, :, 0]
-    mask = (output > 0.5).astype(np.uint8)
+#     if output.ndim == 3:
+#         output = output[:, :, 0]
+#     mask = (output > 0.5).astype(np.uint8)
 
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+#     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    cell_count = len(contours)
-    for cnt in contours:
-        x, y, w, h = cv2.boundingRect(cnt)
-        cv2.rectangle(image_resized, (x, y), (x + w, y + h), (0, 255, 0), 2)
+#     cell_count = len(contours)
+#     for cnt in contours:
+#         x, y, w, h = cv2.boundingRect(cnt)
+#         cv2.rectangle(image_resized, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    return image_resized, cell_count
+#     return image_resized, cell_count
 
-def detect_cells_unet_extended(image):
-    if not isinstance(image, np.ndarray):
-        if image.mode != "RGB":
-            image = image.convert("RGB")
-        image = np.array(image)
+# def detect_cells_unet_extended(image):
+#     if not isinstance(image, np.ndarray):
+#         if image.mode != "RGB":
+#             image = image.convert("RGB")
+#         image = np.array(image)
 
-    image_resized = cv2.resize(image, (256, 256))
-    image_normalized = image_resized.astype(np.float32) / 255.0
-    image_batch = np.expand_dims(image_normalized, axis=0)
+#     image_resized = cv2.resize(image, (256, 256))
+#     image_normalized = image_resized.astype(np.float32) / 255.0
+#     image_batch = np.expand_dims(image_normalized, axis=0)
 
-    output = unet_extended.predict(image_batch)[0]
+#     output = unet_extended.predict(image_batch)[0]
 
-    if output.ndim == 3:
-        output = output[:, :, 0]
-    mask = (output > 0.5).astype(np.uint8)
+#     if output.ndim == 3:
+#         output = output[:, :, 0]
+#     mask = (output > 0.5).astype(np.uint8)
 
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+#     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    cell_count = len(contours)
-    for cnt in contours:
-        x, y, w, h = cv2.boundingRect(cnt)
-        cv2.rectangle(image_resized, (x, y), (x + w, y + h), (0, 255, 0), 2)
+#     cell_count = len(contours)
+#     for cnt in contours:
+#         x, y, w, h = cv2.boundingRect(cnt)
+#         cv2.rectangle(image_resized, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    return image_resized, cell_count
+#     return image_resized, cell_count
