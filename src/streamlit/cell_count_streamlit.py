@@ -14,10 +14,10 @@ def main():
         yolo_base()
     elif choice == "YOLOv8n Extended":
         yolo_extended()
-    elif choice == "U-NET Base":
-        unet_base()
-    elif choice == "U-NET Extended":
-        unet_extended()
+    # elif choice == "U-NET Base":
+    #     unet_base()
+    # elif choice == "U-NET Extended":
+    #     unet_extended()
 
 
 def yolo_base():
